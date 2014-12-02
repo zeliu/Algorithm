@@ -1,0 +1,23 @@
+There are many solutions to this problem:
+
+1、Brute-force solution (O(mn) running time, O(1) memory):
+For each node ai in list A, traverse the entire list B and check if any node in list B coincides with ai.
+暴力解决，对于链表A中的每一个节点，遍历链表B查看该节点是否存在。
+
+2、Hashset solution (O(n+m) running time, O(n) or O(m) memory):
+Traverse list A and store the address / reference to each node in a hash set. Then check every node bi in list B: if bi appears in the hash set, then bi is the intersection node.
+哈希表存储：首先将A链表中的每一个节点存储在一个哈希set中，然后依次拿链表B中的每一个节点查看该节点是否存在于哈希Set中，如果存在说明该节点是交接点。
+
+3、Two pointer solution (O(n+m) running time, O(1) memory):
+	1.Maintain two pointers pA and pB initialized at the head of A and B, respectively. Then let them both traverse through the lists, one node at a time.
+	//维护两个指针pA和pB分别指向链表A和链表B的头结点，然后依次遍历两个链表
+	2.When pA reaches the end of a list, then redirect it to the head of B (yes, B, that's right.); similarly when pB reaches the end of a list, redirect it the head of A.
+	//一直循环下去：每当pA或者pB等于null（到达链表尾部的时候）,就使指针指向另一个链表，然后继续循环
+	3.If at any point pA meets pB, then pA/pB is the intersection node.
+	//直到pA等于pB的时候，该节点就是交接点，P.S.可能为null
+	4.To see why the above trick would work, consider the following two lists: A = {1,3,5,7,9,11} and B = {2,4,9,11}, which are intersected at node '9'. Since B.length (=4) < A.length (=6), pB would reach the end of the merged list first, because pB traverses exactly 2 nodes less than pA does. By redirecting pB to head A, and pA to head B, we now ask pB to travel exactly 2 more nodes than pA would. So in the second iteration, they are guaranteed to reach the intersection node at the same time.
+	//原理：例如A = {1,3,5,7,9,11}，B = {2,4,9,11}，他们的交接点就是‘9’，因为B链表的长度小于A链表的长度，这样pB首先到达链表尾部（等于null），然后让pB指向链表A的头节点，pA指向链表B的头结点，然后让pB首先走两步，接着它们一起前进，直到相等。
+	5.If two lists have intersection, then their last nodes must be the same one. So when pA/pB reaches the end of a list, record the last element of A/B respectively. If the two last elements are not the same one, then the two lists have no intersections.
+	//如果两个链表有交点，那么它们最后一个节点肯定相同，如果最后节点不相同，那么它们就不可能存在交点。
+
+其实它们一直走下去就可以了，不必要求才第二次遍历，对于pA和pB，开始的时候分别指向链表A和链表B的头结点，然后每个指针遇到null的时候就指向另外一个链表的头节点，直到pA等于pB返回。
