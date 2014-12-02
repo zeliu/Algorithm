@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 public class RecursionSolutionWithCache extends Solution {
-	private List<Set<ResultItem>> cache = null;
+	protected List<Set<ResultItem>> cache = null;
 	
 	public RecursionSolutionWithCache(int[] args, int sum) {
 		super(args, sum);
@@ -22,12 +22,12 @@ public class RecursionSolutionWithCache extends Solution {
 			cache.add(null);
 	}
 	
-	public int fetchCombinations() {
+	protected void initCache() {
 		int minValue = minValues[0];
 		//初始化已有参数和比这些数小的数对应的结果
 		for(int value : minValues) {
-			ResultItem item = new ResultItemUseCount(minValues);
-//			ResultItem item = new ResultItemUsePrime(minValues);
+//			ResultItem item = new ResultItemUseCount(minValues);
+			ResultItem item = new ResultItemUsePrime(minValues);
 			item.addItem(value);
 			Set<ResultItem> values = new HashSet<ResultItem>();
 			values.add(item);
@@ -38,8 +38,11 @@ public class RecursionSolutionWithCache extends Solution {
 		
 		for(int i = 0 ; i < minValue ; ++ i) {
 			cache.set(i, new HashSet<ResultItem>());
-		}
-		
+		}		
+	}
+	
+	public int fetchCombinations() {
+		initCache();
 		fetchCombinationsInside();
 		return results.size();
 	}
@@ -66,8 +69,7 @@ public class RecursionSolutionWithCache extends Solution {
 					System.err.println("never happen!");
 					continue;
 				}
-				ResultItem copyItem = new ResultItemUseCount((ResultItemUseCount)item);
-//				ResultItem copyItem = new ResultItemUsePrime((ResultItemUsePrime)item);
+				ResultItem copyItem = (ResultItem) item.clone();
 				copyItem.addItem(value);
 				thisResult.add(copyItem);
 			}		

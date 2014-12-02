@@ -1,13 +1,13 @@
 package tc.football;
 
-import java.util.List;
-
-import sun.tools.jar.resources.jar;
 import tc.common.InputUtils;
 
 public class Test {
 	public static void main(String[] args) {
-		testFromTo(new int[]{2, 3, 7}, 1, 100);
+		for(int i = 0 ; i < 1 ; ++ i) {
+			testFromTo(new int[]{2, 3, 7}, 10, 500, 7);
+			System.out.println("\n\n");
+		}
 	}
 	
 	private static void testWithInput(int[] args) {
@@ -15,7 +15,7 @@ public class Test {
 		int[] mins = args;
 		while(value != null) {
 			long start = System.currentTimeMillis();
-			Solution solution = new RecursionSolutionWithCache(mins, value);
+			Solution solution = new SolutionFromBottomToUp(mins, value);
 			solution.fetchCombinations();
 			long cost = System.currentTimeMillis() - start;
 			System.out.println(solution);
@@ -25,14 +25,14 @@ public class Test {
 		}
 	}
 	
-	private static void testFromTo(int[] args, int from, int to) {
+	private static void testFromTo(int[] args, int from, int to, int gap) {
 		if(from > to || from <= 0 || to <= 0 || args == null || args.length < 1)
 			return ;
 		
 		int[] mins = args;
-		for(int i = from; i <= to ; ++ i) {
+		for(int i = from; i <= to ; i += gap) {
 			long start = System.currentTimeMillis();
-			Solution solution = new RecursionSolution(mins, i);
+			Solution solution = new SolutionWithCacheUseThread(mins, i);
 			int result = solution.fetchCombinations();
 			long cost = System.currentTimeMillis() - start;
 			System.out.println("value = " + i + ", result = " + result + ", cost = " + cost + " ms");

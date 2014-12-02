@@ -12,6 +12,8 @@ public abstract class ResultItem {
 	
 	public abstract void addItem(Integer value);
 	
+	public abstract Object clone();
+	
 	public List<Integer> getResult() {
 		return result;
 	}

@@ -1,6 +1,5 @@
 package tc.football;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -9,9 +8,13 @@ public class ResultItemUseCount extends ResultItem {
 	private int[] args;
 	private Map<Integer, Integer> counterMap;
 	
+	private ResultItemUseCount() {
+		super();
+	}
+	
 	public ResultItemUseCount(int[] args) {
 		super();
-		this.args = args;
+		this.args = args;		
 		counterMap = new HashMap<Integer, Integer>();
 		for(int value : args) {
 			counterMap.put(value, 0);
@@ -22,6 +25,15 @@ public class ResultItemUseCount extends ResultItem {
 		result = new LinkedList<Integer>(item.result);
 		this.args = item.args;
 		this.counterMap = new HashMap<Integer, Integer>(item.counterMap);		
+	}
+	
+	public Object clone() {
+		ResultItemUseCount item = new ResultItemUseCount();
+		item.args = this.args;
+		item.result.addAll(this.result);
+		item.counterMap = new HashMap<Integer, Integer>(this.counterMap);
+		
+		return item;
 	}
 	
 	@Override
@@ -57,9 +69,28 @@ public class ResultItemUseCount extends ResultItem {
 		
 		for(int key : this.counterMap.keySet()) {
 			Integer value = item.counterMap.get(key);
-			if(value == null && value != this.counterMap.get(key))
+			if(value == null || value != this.counterMap.get(key))
 				return false;			
 		}
+		
+		/*
+		 * check result is right !
+		Integer[] curList = this.result.toArray(new Integer[0]);
+		Arrays.sort(curList);
+		Integer[] itemList = item.result.toArray(new Integer[0]);
+		Arrays.sort(itemList);
+		if(curList.length != curList.length) {
+			System.err.println(item + " equals " + this);
+			return false;
+		}
+		for(int i = 0 ; i < curList.length ; ++ i) {
+			if(curList[i] != itemList[i])
+			{
+				System.err.println(item + " equals " + this);
+				return false;
+			}
+		}
+		*/
 		
 		return true;
 	}

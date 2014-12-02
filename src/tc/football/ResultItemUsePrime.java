@@ -1,13 +1,9 @@
 package tc.football;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import sun.tools.jar.resources.jar;
 
 //使用素数相乘来判断两个数组（返回的结果）是否包含相同的元素，根据任意一个素数的乘积只能由唯一的表示方式的原理。
 //策略：每次向结果集中加入一个元素的时候就向乘积中乘以该元素对应的素数，如果根据总的乘积判断两个集合是否包含相同的元素。
@@ -18,6 +14,11 @@ public class ResultItemUsePrime extends ResultItem {
 	private int sumPrime;
 	private Map<Integer, Integer> valueToPrime;
 	private static List<Integer> primes;
+	
+	private ResultItemUsePrime() {
+		super();
+	}
+	
 	public ResultItemUsePrime(int[] args) {
 		super();
 		this.args = args;
@@ -25,11 +26,14 @@ public class ResultItemUsePrime extends ResultItem {
 		valueToPrime = getPrimes(this.args);
 	}
 	
-	public ResultItemUsePrime(ResultItemUsePrime prev) {
-		result = new LinkedList<Integer>(prev.result);
-		this.args = prev.args;
-		sumPrime = prev.sumPrime;
-		valueToPrime = getPrimes(this.args);
+	public Object clone() {
+		ResultItemUsePrime item = new ResultItemUsePrime();
+		item.args = this.args;
+		item.result.addAll(this.result);
+		item.sumPrime = this.sumPrime;
+		item.valueToPrime = getPrimes(this.args);
+		
+		return item;
 	}
 	
 	public void addItem(Integer value) {
@@ -54,6 +58,8 @@ public class ResultItemUsePrime extends ResultItem {
 			return false;
 		
 		boolean result = (item.sumPrime == this.sumPrime);
+		/*
+		 * check result is right !
 		if(result) {
 			Integer[] curList = this.result.toArray(new Integer[0]);
 			Arrays.sort(curList);
@@ -71,6 +77,7 @@ public class ResultItemUsePrime extends ResultItem {
 				}
 			}
 		}
+		*/
 		return result;
 	}
 	

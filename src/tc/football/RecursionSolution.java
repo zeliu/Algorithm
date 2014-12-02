@@ -1,13 +1,5 @@
 package tc.football;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import tc.common.InputUtils;
-
 //使用递归的方式实现
 public class RecursionSolution extends Solution{		
 	public RecursionSolution(int[] args, int sum) {
@@ -34,7 +26,7 @@ public class RecursionSolution extends Solution{
 		}
 		
 		for(int value : this.minValues) {
-			ResultItem newRet = new ResultItemUsePrime((ResultItemUsePrime) result);
+			ResultItem newRet = (ResultItem) result.clone();
 			newRet.addItem(value);
 			recursionCalculate(param - value, newRet);
 		}
