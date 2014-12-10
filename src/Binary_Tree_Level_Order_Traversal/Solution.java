@@ -1,5 +1,6 @@
 package Binary_Tree_Level_Order_Traversal;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -20,7 +21,6 @@ public class Solution {
     	List<List<Integer>> result = new LinkedList<List<Integer>>();
         if(root == null)
         	return result;
-        
         Queue<TreeNode> queue = new LinkedList<TreeNode>();
         queue.add(root);
         List<Integer> values = new LinkedList<Integer>();
@@ -50,6 +50,44 @@ public class Solution {
         return result;
     }
     
+    public List<List<Integer>> levelReverseOrder(TreeNode root) {
+    	List<List<Integer>> result = new LinkedList<List<Integer>>();
+        if(root == null)
+        	return result;
+        Queue<TreeNode> queue = new LinkedList<TreeNode>();
+        queue.add(root);
+        List<Integer> values = new LinkedList<Integer>();
+        values.add(root.val);
+        result.add(values);
+        while(!queue.isEmpty()) {
+        	List<Integer> line = new LinkedList<Integer>();
+        	Queue<TreeNode> temp = new LinkedList<TreeNode>(queue);
+        	queue.clear();
+        	while(!temp.isEmpty()) {
+        		TreeNode node = temp.poll();
+        		if(node == null)
+        			break;
+        		if(node.left != null) {
+        			queue.add(node.left);
+        			line.add(node.left.val);
+        		}
+        		if(node.right != null) {
+        			queue.add(node.right);
+        			line.add(node.right.val);
+        		}
+        	}
+        	if(!line.isEmpty()) {
+        		result.add(line);
+        	}
+        }
+        
+        int size = result.size();
+        List<List<Integer>> result2 = new ArrayList<List<Integer>>(size);
+        for(int i = size - 1 ; i >= 0 ; -- i)
+        	result2.add(result.get(i));
+        return result2;
+    }
+    
     public static void main(String[] args) {
     	TreeNode node1 = new TreeNode(1);
     	TreeNode node2 = new TreeNode(2);
@@ -71,5 +109,6 @@ public class Solution {
     	
     	Solution solution = new Solution();
     	System.out.println(solution.levelOrder(node1));
+    	System.out.println(solution.levelReverseOrder(node1));
     }
 }

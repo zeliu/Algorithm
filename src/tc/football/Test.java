@@ -4,6 +4,7 @@ import tc.common.InputUtils;
 
 public class Test {
 	public static void main(String[] args) {
+		test();
 		for(int i = 0 ; i < 1 ; ++ i) {
 			testFromTo(new int[]{2, 3, 7}, 10, 500, 7);
 			System.out.println("\n\n");
@@ -44,7 +45,7 @@ public class Test {
 		long prevSum = 1;
 		int index = 1;
 		
-		for(int i = 3 ; true ; ++ i) {
+		for(int i = 3 ; i < 100 ; ++ i) {
 			int j = 2;
 			for( ; j <= (i >> 1) && (i %j != 0) ; ++ j);
 			if(j > (i >> 1)) {
