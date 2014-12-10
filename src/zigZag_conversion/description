@@ -1,0 +1,14 @@
+URL : https://oj.leetcode.com/problems/zigzag-conversion/
+
+The string "PAYPALISHIRING" is written in a zigzag pattern on a given number of rows like this: (you may want to display this pattern in a fixed font for better legibility)
+
+P   A   H   N
+A P L S I I G
+Y   I   R
+And then read line by line: "PAHNAPLSIIGYIR"
+Write the code that will take a string and make this conversion given a number of rows:
+
+string convert(string text, int nRows);
+convert("PAYPALISHIRING", 3) should return "PAHNAPLSIIGYIR".
+
+Z字形转换：给定一个字符串和执行的行数，将这个字符串按照N（倒过来，先是从上到下的一竖，然后一撇从下到上，再加一竖）字形排列，最后按行输出排列之后的字符串

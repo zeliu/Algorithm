@@ -10,7 +10,7 @@ import java.util.Map;
  * 然后依次遍历待查找的字符串，对于每一个字符串，查看该字符串出现的所有位置，如果该位置能够在相邻
  * 的位置中找到下一个字符，那么就标记该位置已使用并进栈，如果能够遍历到最后一个字符，那么说明能找到该路径
  * 否则让该位置出栈，继续尝试下一个位置，如果某个字符所有的位置都已经被尝试，则说明不存在该路径。
- * 
+ * 妈蛋，终于Accepted了！要记住，上有一个入栈信息中要记录下一个节点遍历到哪一个了。
  */
 
 public class Solution {
@@ -23,14 +23,6 @@ public class Solution {
 			this.x = x;
 			this.y = y;
 			this.used = false;
-		}
-		
-		public int getX() {
-			return x;
-		}
-		
-		public int getY() {
-			return y;
 		}
 		
 		public boolean isUsed() {
@@ -59,10 +51,12 @@ public class Solution {
 	private class Element {
 		private char ch;
 		private int index;
+		private int nextIndex;
 		
 		public Element(char ch, int index) {
 			this.ch = ch;
 			this.index = index;
+			this.nextIndex = -1;
 		}
 		
 		public int getIndex(){
@@ -71,7 +65,15 @@ public class Solution {
 		
 		public char getChar() {
 			return this.ch;
-		}		
+		}
+		
+		public int getNextIndex() {
+			return this.nextIndex;
+		}
+		
+		public void setNextIndex(int index) {
+			this.nextIndex = index;
+		}
 	}
 	
 	private class Stack {
@@ -102,57 +104,44 @@ public class Solution {
 		}
 	}
 	
-	private class Unit {
-		private List<Point> points;
-		
-		public Unit() {
-			points = new ArrayList<Point>();
-		}
-		
-		public void addPoint(Point p) {
-			points.add(p);
-		}
-
-		public List<Point> getPoints() {
-			return points;
-		}
-	}
 	public boolean exist(char[][] board, String word) {
 		if(board == null || word == null)
 			return false;
 		if(word.isEmpty())
 			return true;
 		
-        Map<Character, Unit> indexMap = new HashMap<Character, Unit>();
+        Map<Character, List<Point>> indexMap = new HashMap<Character, List<Point>>();
         int row = board.length;
         int col = board[0].length;
         for(int i = 0 ; i < row ; ++ i) {
         	for(int j = 0 ; j < col ; ++ j) {
         		char ch = board[i][j];
-        		Unit points = indexMap.get(ch);
+        		List<Point> points = indexMap.get(ch);
         		if(points == null) {
-        			points = new Unit();
+        			points = new ArrayList<Point>();
         			indexMap.put(ch, points);
         		}
-        		points.addPoint(new Point(i, j));
+        		points.add(new Point(i, j));
         	}
         }
         
         int length = word.length();
         Stack stack = new Stack(length);
-        Unit head = indexMap.get(word.charAt(0));
-        for(int i = 0 ; i < head.getPoints().size() ; ++ i) {
+        List<Point> head = indexMap.get(word.charAt(0));
+        if(head == null)
+        	return false;
+        for(int i = 0 ; i < head.size() ; ++ i) {
         	stack.push(new Element(word.charAt(0), i));
-        	head.getPoints().get(i).setUsed(true);
+        	head.get(i).setUsed(true);
         	while(stack.getTop() > 0) {
         		int index = stack.getTop() - 1;
         		if(index == length - 1)
         			return true;
         		Element top = stack.top();
-        		Element next = getNextElement(indexMap, word, index, top.getIndex());
+        		Element next = getNextElement(indexMap, word, index, top);
         		if(next == null) {
         			Element e = stack.pop();
-        			indexMap.get(e.getChar()).getPoints().get(e.getIndex()).setUsed(false);
+        			indexMap.get(e.getChar()).get(e.getIndex()).setUsed(false);
         		}
         		else {
         			stack.push(next);
@@ -162,26 +151,27 @@ public class Solution {
         return false;
 	}
 	
-	private Element getNextElement(Map<Character, Unit> map, String word, int index, int start) {
+	private Element getNextElement(Map<Character, List<Point>> map, String word, int index, Element prev) {
 		if(index >= word.length() - 1)
 			return null;
 		
 		char first = word.charAt(index);
 		char second = word.charAt(index + 1);
 		
-		Unit cur = map.get(first);
-		Unit next = map.get(second);
+		List<Point> cur = map.get(first);
+		List<Point> next = map.get(second);
 		if(cur == null || next == null)
 			return null;
 		
-		Point point = cur.getPoints().get(start);
-		int size = next.getPoints().size();
-		for(int i = 0 ; i < size ; ++ i) {
-			Point nextPoint = next.getPoints().get(i);
+		Point point = cur.get(prev.getIndex());
+		int size = next.size();
+		for(int i = prev.getNextIndex() + 1 ; i < size ; ++ i) {
+			Point nextPoint = next.get(i);
 			if(nextPoint.isUsed())
 				continue;
 			if(point.adjacent(nextPoint)) {
 				nextPoint.setUsed(true);
+				prev.setNextIndex(i);
 				return new Element(second, i);
 			}
 		}
@@ -189,18 +179,19 @@ public class Solution {
 	}
 	
 	public static void main(String[] args) {
-		
+		/*
 		char[] a = new char[]{'A','B','C','E'};
 		char[] b = new char[]{'S','F','C','S'};
 		char[] c = new char[]{'A','D','E','E'};
-		
+		*/
 		/*
 		char[] a = new char[]{'a','a','a'};
 		char[] b = new char[]{'a','a','a'};
 		char[] c = new char[]{'a','a','a'};
 		*/
-		char[][] board = new char[][]{a,b,c};
+		char[] a = new char[]{'a'};
+		char[][] board = new char[][]{a};
 		Solution exist = new Solution();
-		System.out.println(exist.exist(board , "ABCB"));
+		System.out.println(exist.exist(board , "b"));
 	}
 }

@@ -1,13 +1,8 @@
 package word_search;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import com.sun.xml.internal.bind.v2.model.core.ID;
 
 /*
  * 第一种方案：使用递归的方式，首先记录每一个字符出现的位置，并将它保存在一个map中
@@ -27,15 +22,7 @@ public class Exist {
 			this.x = x;
 			this.y = y;
 			this.used = false;
-		}
-		
-		public int getX() {
-			return x;
-		}
-		
-		public int getY() {
-			return y;
-		}
+		}		
 		
 		public boolean isUsed() {
 			return this.used;
